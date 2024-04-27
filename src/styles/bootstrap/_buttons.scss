@@ -1,0 +1,62 @@
+// Define a mixin for the .btn class
+@mixin bs-button(
+    $btn-color: $primary, $btn-hover-color: darken($btn-color, 10%),
+    $text-color: $secondary, $text-hover-color: $dark
+) {
+    // start
+    $body-color: $text-color;
+    $input-btn-focus-box-shadow:    0 0 $input-btn-focus-blur $input-btn-focus-width $btn-hover-color !default;
+    // end
+
+    display: inline-block;
+    font-family: $btn-font-family;
+    font-weight: $btn-font-weight;
+    line-height: $btn-line-height;
+    color: $body-color;
+    text-align: center;
+    text-decoration: if($link-decoration ==none, null, none);
+    white-space: $btn-white-space;
+    vertical-align: middle;
+    cursor: if($enable-button-pointers, pointer, null);
+    user-select: none;
+    background-color: $btn-color;
+    border: $btn-border-width solid $btn-color;
+    @include button-size($btn-padding-y, $btn-padding-x, $btn-font-size, $btn-border-radius);
+    @include transition($btn-transition);
+
+    &:hover {
+        text-decoration: if($link-hover-decoration ==underline, none, null);
+    }
+
+    .btn-check:focus+&,
+    &:focus {
+        outline: 0;
+        box-shadow: $btn-focus-box-shadow;
+    }
+
+    .btn-check:checked+&,
+    .btn-check:active+&,
+    &:active,
+    &.active {
+        @include box-shadow($btn-active-box-shadow);
+
+        &:focus {
+            @include box-shadow($btn-focus-box-shadow, $btn-active-box-shadow);
+        }
+    }
+
+    &:disabled,
+    &.disabled,
+    fieldset:disabled & {
+        pointer-events: none;
+        opacity: $btn-disabled-opacity;
+        @include box-shadow(none);
+    }
+
+    &:hover,
+    &:active,
+    &:focus {
+        background-color: $btn-hover-color;
+        color: $text-hover-color;
+    }
+}

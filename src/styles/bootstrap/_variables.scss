@@ -1,0 +1,27 @@
+$theme-colors: (
+  primary: #0d6efd,
+  secondary: #6c757d,
+  success: #198754,
+  info: #0dcaf0,
+  warning: #ffc107,
+  danger: #dc3545,
+  light: #f8f9fa,
+  dark: #212529
+);
+
+$custom-colors: (
+
+);
+
+$theme-colors: map-merge($map1: $theme-colors, $map2: $custom-colors);
+
+// Extend the defaults
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px
+);
+
