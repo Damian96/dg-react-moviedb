@@ -6,10 +6,8 @@ export const SearchModalWrapper = styled.div`
       background-color: rgba(0, 0, 0, 0.5);
     }
 
-    .movie-poster {
-      &>img {
-        max-height: 250px;
-      }
+    .movie-grid {
+        grid-template-columns: repeat(6, 175px);
     }
   }
 `;

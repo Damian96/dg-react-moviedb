@@ -2,6 +2,7 @@ import React, {FC, useEffect, useState} from 'react';
 import {SearchModalWrapper} from './SearchModal.styled';
 import {searchMovies} from "../../services/movies";
 import {Movie, MovieResponse} from "../../types/movie";
+import MovieItem from "../movie-item/movie-item.lazy";
 
 interface SearchModalProps {
 }
@@ -10,8 +11,9 @@ const SearchModal: FC<SearchModalProps> = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState<Movie[]>([]);
 
-  const movieNameRegex = /^[a-zA-Z0-9\s\-&',.()]+$/;
   useEffect(() => {
+    const movieNameRegex = /^[a-zA-Z0-9\s\-&',.()]+$/;
+
     if (!searchTerm || !searchTerm.trim().length) return;
 
     if (!movieNameRegex.test(searchTerm)) return;
@@ -27,7 +29,7 @@ const SearchModal: FC<SearchModalProps> = () => {
       .catch((err) => {
         console.error('searchTerm error', err);
       })
-  }, [searchTerm, movieNameRegex]);
+  }, [searchTerm]);
 
   return (
     <SearchModalWrapper>
@@ -45,7 +47,7 @@ const SearchModal: FC<SearchModalProps> = () => {
                   </div>
                   <div className="col-12 col-lg-1 d-flex align-items-center">
                     <button type="button" className="btn-close btn-close-white opacity-100" data-bs-dismiss="modal"
-                      aria-label="Close"></button>
+                            aria-label="Close"></button>
                   </div>
                 </div>
               </div>
@@ -57,13 +59,13 @@ const SearchModal: FC<SearchModalProps> = () => {
                   <div className="col-12">
                   </div>
                 </div>
-                <div className={'row gap-5 ' + (searchResults.length > 3 ? 'justify-content-between' : null)}>
+                <div className={'d-grid movie-grid gap-5 px-2'}>
                   {searchResults.length ? searchResults.map((movie) => {
+                    if (!movie.poster_path) return null;
                     return (
-                      <a className="col-auto movie-poster" href="#" title={movie.title} key={movie.id}>
-                        <img src={process.env.REACT_APP_TMDB_POSTERS_500 + movie.poster_path} alt={movie.title}
-                             className="img-fluid"/>
-                      </a>
+                      <div className="col-auto" key={movie.id}>
+                        <MovieItem movie={movie}></MovieItem>
+                      </div>
                     );
                   }) : null}
                 </div>
