@@ -7,6 +7,7 @@ import 'bootstrap-icons/font/bootstrap-icons.min.css';
 import SearchModal from "./components/SearchModal/SearchModal.lazy";
 import {Provider} from "react-redux";
 import configurestore from "./redux/configurestore";
+import FavoritesLazy from "./components/favorites/favorites.lazy";
 
 function App() {
   return (
@@ -46,6 +47,14 @@ function App() {
         </header>
 
         <SearchModal></SearchModal>
+
+        <main id="main">
+          <section id="favorites-section">
+            <FavoritesLazy></FavoritesLazy>
+          </section>
+
+        </main>
+
       </div>
     </Provider>
   );

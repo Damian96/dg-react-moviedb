@@ -1,13 +1,16 @@
 import {createSlice} from '@reduxjs/toolkit'
 
 import {Movie} from "../../types/movie";
+import {loadState} from "../localstorage";
 
 export interface favoritesState {
   movies: Movie[]
 }
 
+export const persistedState = loadState();
+
 const initialState: favoritesState = {
-  movies: []
+  movies: persistedState ? persistedState.favorites.movies : []
 }
 
 export const favoritesSlice = createSlice({
