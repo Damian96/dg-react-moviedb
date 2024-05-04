@@ -64,11 +64,13 @@ function MovieItem(props: MovieItemProps) {
       <div className="item position-relative" title={movie.title}>
         <img src={process.env.REACT_APP_TMDB_POSTERS_500 + movie.poster_path} alt={movie.title}
              className="img-fluid"/>
-        <div className="item-actions">
-          {!showLottie ? <FontAwesomeIcon icon={isFavorite ? fasHeart : faHeart} size="2x"
-                                          onClick={handleToggleFavorite}></FontAwesomeIcon> :
-            <div ref={lottieRef} id={lottieContainerID} className="lottie-container w-50"
-                 onClick={handleToggleFavorite}></div>}
+        <div className="item-actions row justify-content-start">
+          <div className="favorite-action cursor-pointer col-6" title={isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}>
+            {!showLottie ? <FontAwesomeIcon icon={isFavorite ? fasHeart : faHeart} size="2x"
+                                            onClick={handleToggleFavorite}></FontAwesomeIcon> :
+              <div ref={lottieRef} id={lottieContainerID} className="lottie-container"
+                   onClick={handleToggleFavorite}></div>}
+          </div>
         </div>
       </div>
     </MovieItemWrapper>

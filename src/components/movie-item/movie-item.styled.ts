@@ -20,7 +20,8 @@ export const MovieItemWrapper = styled.div`
       .lottie-container {
         position: relative;
         top: -40px;
-        transform: translateY(41%) scale(1.6);
+        transform: translate(-33%, 50%) scale(1.6);
+        //transform: translateY(41%) scale(1.6);
       }
     }
   }
