@@ -1,10 +1,10 @@
-import React, {FC, useRef} from 'react';
+import React, {FC, useRef, useState} from 'react';
 import {LayoutWrapper} from './layout.styled';
 import {Link, Outlet} from "react-router-dom";
-import SearchModal from "../SearchModal/SearchModal.lazy";
+import SearchModal from "../search-modal/search-modal.lazy";
 import {ThemeProvider} from "styled-components";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faBars} from "@fortawesome/free-solid-svg-icons";
+import {faBars, faTimes} from "@fortawesome/free-solid-svg-icons";
 
 interface LayoutProps {
 }
@@ -27,6 +27,8 @@ const Layout: FC<LayoutProps> = () => {
   const headerpdRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
 
+  const [navbarExpanded, setNavbarExpanded] = useState(false);
+
   const handleToggleClick = () => {
     if (toggleRef.current && navRef.current && bodypdRef.current && headerpdRef.current
       && backdropRef.current) {
@@ -40,11 +42,18 @@ const Layout: FC<LayoutProps> = () => {
       bodypdRef.current.classList.toggle('body-pd')
       // add padding to header
       headerpdRef.current.classList.toggle('body-pd')
+
+      setNavbarExpanded(!navbarExpanded);
     }
   };
 
   const handleBackdropClick = () => {
     if (backdropRef.current && backdropRef.current.classList.contains('show')) handleToggleClick();
+  };
+
+  const handleSearchClick = () => {
+    const modal = window.bootstrap.Modal.getOrCreateInstance(document.getElementById('searchModal')!);
+    modal.show();
   };
 
   return (
@@ -55,12 +64,9 @@ const Layout: FC<LayoutProps> = () => {
             <div className="container-fluid">
 
               <div className="row justify-content-start gap-lg-2">
-
                 <div ref={toggleRef} className="header_toggle col-auto" onClick={handleToggleClick}>
-                  <FontAwesomeIcon icon={faBars} color="white"/>
+                  <FontAwesomeIcon icon={navbarExpanded ? faTimes : faBars} color="white"/>
                 </div>
-
-                <Link to="/" className="col-auto me-xl-0 d-flex align-items-center">MyMovieDB</Link>
               </div>
 
 
@@ -71,8 +77,13 @@ const Layout: FC<LayoutProps> = () => {
             <nav className="nav">
               <ul className="d-flex flex-column flex-wrap list-unstyled">
                 <li className="nav-item">
-                    <Link className="nav-link active" aria-current="page"
-                    to={'/favorites'}>
+                  <Link to="/" className="nav-link tex-white">
+                    <span className="nav-link-icon"><span className="bi bi-house"></span></span>
+                    <span className="nav-link-text">MyMovieDB</span>
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" aria-current="page" to={'/favorites'}>
                     <span className="nav-link-icon"><span className="bi bi-heart"></span></span>
                     <span className="nav-link-text">Favorites</span>
                   </Link>
@@ -86,16 +97,12 @@ const Layout: FC<LayoutProps> = () => {
           <main id="main" className="body-pd">
             <Outlet/>
 
-            <div className="position-fixed search-btn btn btn-primary rounded-circle">
-              <a href="#" title="Search" className="searchTrigger ms-auto d-flex align-items-center col-auto"
-                   onClick={(e) => {
-                     const modal = window.bootstrap.Modal.getOrCreateInstance(document.getElementById('searchModal')!);
-                     modal.show();
-                   }}>
-                  <i className="bi bi-search text-light lead"></i>
-                  <span className="d-none" id="searchModalLabel">search</span>
-                </a>
-            </div>
+            <button className="searchTrigger position-fixed search-btn btn btn-primary rounded-circle" title="Search"
+                    onClick={handleSearchClick}>
+              <i className="bi bi-search text-light lead"></i>
+              <span className="d-none" id="searchModalLabel">search</span>
+            </button>
+
           </main>
 
 

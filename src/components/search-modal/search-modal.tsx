@@ -1,5 +1,5 @@
 import React, {FC, useEffect, useState} from 'react';
-import {SearchModalWrapper} from './SearchModal.styled';
+import {SearchModalWrapper} from './search-modal.styled';
 import {searchMovies} from "../../services/movies";
 import {Movie, MovieResponse} from "../../types/movie";
 import MovieItem from "../movie-item/movie-item.lazy";
