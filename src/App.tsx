@@ -14,12 +14,12 @@ import Layout from "./components/layout/layout.lazy";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Layout />,
+    element: <Layout/>,
     /*errorElement: <ErrorPage />,*/
     children: [
       {
         path: "/favorites/",
-        element: <FavoritesLazy />,
+        element: <FavoritesLazy/>,
       },
     ],
   },

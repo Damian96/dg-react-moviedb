@@ -4,9 +4,8 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-import configurestore from "./redux/configurestore";
-import {Provider} from "react-redux";
 import * as bootstrap from 'bootstrap';
+
 window.bootstrap = bootstrap;
 
 const root = ReactDOM.createRoot(
@@ -14,9 +13,9 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   // <Provider store={configurestore}>
-    <React.StrictMode>
-      <App/>
-    </React.StrictMode>
+  <React.StrictMode>
+    <App/>
+  </React.StrictMode>
   // </Provider>
 );
 
