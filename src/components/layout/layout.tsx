@@ -1,10 +1,15 @@
-import React, {FC, useRef, useState} from 'react';
+import React, {FC, useEffect, useRef, useState} from 'react';
 import {LayoutWrapper} from './layout.styled';
 import {Link, Outlet} from "react-router-dom";
 import SearchModal from "../search-modal/search-modal.lazy";
 import {ThemeProvider} from "styled-components";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faBars, faTimes} from "@fortawesome/free-solid-svg-icons";
+import {useSelector} from "react-redux";
+import {selectShowToast, selectToastData} from "../../redux/selectors/modals";
+import Toast from "../toast/toast.lazy";
+import {ToastTheme} from "../toast/toast";
+import {selectAuthMessage, selectIsLoggedIn} from "../../redux/selectors/auth";
 
 interface LayoutProps {
 }
@@ -55,6 +60,25 @@ const Layout: FC<LayoutProps> = () => {
     const modal = window.bootstrap.Modal.getOrCreateInstance(document.getElementById('searchModal')!);
     modal.show();
   };
+
+  const [showToast, setShowToast] = useState(useSelector(selectShowToast))
+  const [toastMessage, setToastMessage] = useState(useSelector(selectToastData))
+  const [toastTheme, setToastTheme] = useState<ToastTheme>('info');
+
+  const isLoggedIn = useSelector(selectIsLoggedIn);
+  const authMessage = useSelector(selectAuthMessage);
+
+  useEffect(() => {
+    if (isLoggedIn && authMessage) {
+      setShowToast(true);
+      setToastMessage({message: authMessage});
+      setToastTheme('info');
+    } else if (!isLoggedIn && authMessage) {
+      setShowToast(true);
+      setToastMessage({message: authMessage});
+      setToastTheme('danger');
+    }
+  }, [isLoggedIn, authMessage]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -108,6 +132,9 @@ const Layout: FC<LayoutProps> = () => {
 
           <div ref={backdropRef} id="backdrop" className="position-fixed top-0 start-0" onClick={handleBackdropClick}></div>
 
+          {showToast && toastMessage.message.trim().length ?
+            <Toast body={toastMessage.message} key={'bs_toast_' + (new Date).getTime().toString()}
+                   theme={toastTheme}></Toast> : null}
         </div>
       </LayoutWrapper>
     </ThemeProvider>

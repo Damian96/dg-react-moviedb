@@ -1,23 +1,19 @@
 import React, {FC} from 'react';
-import {LoginWrapper} from './login.styled';
-import {useForm, SubmitHandler} from "react-hook-form"
+import {RegisterWrapper} from './register.styled';
 import {Link} from "react-router-dom";
-import {login as loginAction} from '../../redux/reducers/auth';
+import {useForm, SubmitHandler} from "react-hook-form"
 import configurestore from "../../redux/configurestore";
-import {useDispatch} from "react-redux";
-import {Dispatch} from "@reduxjs/toolkit";
+import {register as registerAction} from '../../redux/reducers/auth';
 
 type Inputs = {
   email: string
   password: string
 }
 
-interface LoginProps {
+interface RegisterProps {
 }
 
-const Login: FC<LoginProps> = () => {
-
-  const dispatch: Dispatch = useDispatch()
+const Register: FC<RegisterProps> = () => {
 
   const {
     register,
@@ -25,11 +21,11 @@ const Login: FC<LoginProps> = () => {
     formState: {errors},
   } = useForm<Inputs>()
   const onSubmit: SubmitHandler<Inputs> = ({email, password}) => {
-    dispatch(loginAction({email: email, password: password}));
+    configurestore.dispatch(registerAction({email: email, password: password}));
   }
 
   return (
-    <LoginWrapper>
+    <RegisterWrapper>
       <section className="h-100">
         <div className="container h-100">
           <div className="row justify-content-sm-center h-100">
@@ -37,7 +33,7 @@ const Login: FC<LoginProps> = () => {
               <div className="text-center my-5">MyMovieDB</div>
               <div className="card shadow-lg">
                 <div className="card-body p-5">
-                  <h1 className="fs-4 card-title fw-bold mb-4">Login</h1>
+                  <h1 className="fs-4 card-title fw-bold mb-4">Register</h1>
                   <form method="POST" className="needs-validation" noValidate={false} autoComplete="off"
                         onSubmit={handleSubmit(onSubmit)}>
                     <div className="mb-3">
@@ -59,9 +55,10 @@ const Login: FC<LoginProps> = () => {
                       </div>
                       <input id="password" type="password" className="form-control" required
                              autoComplete="current-password"
-                             {...register("password", {required: true})}/>
+                             {...register("password", {required: true, minLength: 4})}/>
                       <div className={'invalid-feedback ' + (errors.password ? 'd-block' : 'd-none')}>
                         {errors.password?.type === 'required' && ("Password is required")}
+                        {errors.password?.type === 'minLength' && ("Password should be at least 4 characters long")}
                       </div>
                     </div>
 
@@ -70,13 +67,13 @@ const Login: FC<LoginProps> = () => {
                       {/*  <input type="checkbox" name="remember" id="remember" className="form-check-input"/>*/}
                       {/*  <label htmlFor="remember" className="form-check-label">Remember Me</label>*/}
                       {/*</div>*/}
-                      <button type="submit" className="btn btn-primary">Login</button>
+                      <button type="submit" className="btn btn-primary">Register</button>
                     </div>
                   </form>
                 </div>
                 <div className="card-footer py-3 border-0">
                   <div className="text-center">
-                    Don't have an account? <Link to={'/register'} className="text-dark">Create one</Link>.
+                    Already have an account? <Link to={'/login'} className="text-dark">Log in</Link>.
                   </div>
                 </div>
               </div>
@@ -84,8 +81,8 @@ const Login: FC<LoginProps> = () => {
           </div>
         </div>
       </section>
-    </LoginWrapper>
+    </RegisterWrapper>
   );
 };
 
-export default Login;
+export default Register;

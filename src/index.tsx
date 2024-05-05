@@ -5,6 +5,9 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 import * as bootstrap from 'bootstrap';
+import FirebaseAppProvider from "./constants/firebase";
+import {Provider} from "react-redux";
+import configurestore from "./redux/configurestore";
 
 window.bootstrap = bootstrap;
 
@@ -13,7 +16,11 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <App/>
+    <FirebaseAppProvider>
+      <Provider store={configurestore}>
+        <App/>
+      </Provider>
+    </FirebaseAppProvider>
   </React.StrictMode>
 );
 

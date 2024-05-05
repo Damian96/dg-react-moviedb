@@ -4,7 +4,7 @@ import './App.css';
 import './styles/bootstrap/custom.scss';
 import 'bootstrap-icons/font/bootstrap-icons.min.css';
 
-import {Provider} from "react-redux";
+import {Provider, useSelector} from "react-redux";
 import configurestore from "./redux/configurestore";
 import FavoritesLazy from "./components/favorites/favorites.lazy";
 
@@ -13,9 +13,14 @@ import Layout from "./components/layout/layout.lazy";
 import AuthGuard from "./guards/auth.guard";
 import Login from "./components/login/login";
 import FirebaseAppProvider from "./constants/firebase";
+import {selectIsLoggedIn} from "./redux/selectors/auth";
+import Register from "./components/register/register";
 
 
 function App() {
+
+  const isLoggedIn = useSelector(selectIsLoggedIn);
+
   const router = createBrowserRouter([
     {
       path: "/",
@@ -37,16 +42,20 @@ function App() {
           element: <Login/>,
         }
       ]
+    },
+    {
+      path: '/register',
+      element: <Layout/>,
+      children: [
+        {
+          path: '/register',
+          element: !isLoggedIn ? <Register/> : <Login/>,
+        }
+      ]
     }
   ]);
 
-  return (
-    <FirebaseAppProvider>
-      <Provider store={configurestore}>
-        <RouterProvider router={router}/>
-      </Provider>
-    </FirebaseAppProvider>
-  );
+  return (<RouterProvider router={router}/>);
 }
 
 export default App;

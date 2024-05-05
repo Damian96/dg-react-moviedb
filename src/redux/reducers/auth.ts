@@ -1,18 +1,16 @@
 import {createSlice} from '@reduxjs/toolkit'
-
-// import {Movie} from "../../types/movie";
 import {loadState} from "../localstorage";
-import {signInWithEmailAndPassword} from "firebase/auth";
-import {auth} from "../../constants/firebase";
 
 export interface authState {
   token?: string
+  message?: string
 }
 
 export const persistedState = loadState();
 
 const initialState: authState = {
-  token: persistedState && persistedState.auth ? persistedState.auth.token : undefined
+  token: persistedState && persistedState.auth ? persistedState.auth.token : undefined,
+  message: undefined
 }
 
 export const authSlice = createSlice({
@@ -20,29 +18,41 @@ export const authSlice = createSlice({
   initialState: initialState,
   reducers: {
     login: (state, action) => {
-      const {email, password} = action.payload;
-      signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          userCredential.user.getIdToken().then(token => {
-            state.token = token;
-          })
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-
-          console.log('firebaseError', errorCode);
-          console.log('firebaseError', errorMessage);
-          console.error(errorMessage);
-        });
+    },
+    loginFailure: (state, action) => {
+      const {message } = action.payload;
+      state.token = undefined;
+      state.message = message;
+    },
+    loginSuccess: (state, action) => {
+      const {token} = action.payload
+      state.token = token;
+      state.message = 'You have successfully logged in!';
     },
     logout: (state, action) => {
       state.token = undefined;
+    },
+    register: (state, action) => {
+    },
+    registerSuccess: (state, action) => {
+      const {token} = action.payload
+      state.token = token;
+      state.message = 'You have successfully registered!';
+    },
+    registerFailure: (state, action) => {
     }
   },
 })
 
 // Action creators are generated for each case reducer function
-export const {login, logout} = authSlice.actions
+export const {
+  login,
+  loginFailure,
+  loginSuccess,
+  logout,
+  register,
+  registerSuccess,
+  registerFailure
+} = authSlice.actions
 
 export default authSlice.reducer
