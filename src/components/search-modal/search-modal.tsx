@@ -3,6 +3,7 @@ import {SearchModalWrapper} from './search-modal.styled';
 import {searchMovies} from "../../services/movies";
 import {Movie, MovieResponse} from "../../types/movie";
 import MovieItem from "../movie-item/movie-item.lazy";
+import {useNavigate} from "react-router-dom";
 
 interface SearchModalProps {
 }
@@ -12,6 +13,11 @@ const SearchModal: FC<SearchModalProps> = () => {
   const [searchResults, setSearchResults] = useState<Movie[]>([]);
 
   const searchModal = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+
+  const handleMovieItemClick = (movieID: number) => {
+    navigate('/movie/' + movieID);
+  }
 
   useEffect(() => {
     const movieNameRegex = /^[a-zA-Z0-9\s\-&',.()]+$/;
@@ -73,7 +79,7 @@ const SearchModal: FC<SearchModalProps> = () => {
                   {searchResults.length ? searchResults.map((movie) => {
                     if (!movie.poster_path) return null;
                     return (
-                      <div className="col-auto" key={movie.id}>
+                      <div className="col-auto" key={movie.id} onClick={handleMovieItemClick.bind(this, movie.id)}>
                         <MovieItem movie={movie}></MovieItem>
                       </div>
                     );

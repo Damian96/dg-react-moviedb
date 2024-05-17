@@ -13,6 +13,7 @@ import AuthGuard from "./guards/auth.guard";
 import Login from "./components/login/login";
 import {selectIsLoggedIn} from "./redux/selectors/auth";
 import Register from "./components/register/register";
+import MovieDetailLazy from "./components/movie-detail/movie-detail.lazy";
 
 
 function App() {
@@ -29,6 +30,10 @@ function App() {
           path: "/favorites",
           element: <AuthGuard component={<FavoritesLazy/>}></AuthGuard>,
         },
+        {
+          path: 'movies/:id',
+          element: <AuthGuard component={<MovieDetailLazy/>}></AuthGuard>
+        }
       ],
     },
     {
@@ -50,7 +55,7 @@ function App() {
           element: !isLoggedIn ? <Register/> : <Login/>,
         }
       ]
-    }
+    },
   ]);
 
   return (<RouterProvider router={router}/>);
