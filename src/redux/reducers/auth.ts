@@ -3,7 +3,8 @@ import {loadState} from "../localstorage";
 
 export interface authState {
   token?: string
-  message?: string
+  message?: string,
+  errorID?: string
 }
 
 export const persistedState = loadState();
@@ -20,9 +21,10 @@ export const authSlice = createSlice({
     login: (state, action) => {
     },
     loginFailure: (state, action) => {
-      const {message } = action.payload;
+      const {message} = action.payload;
       state.token = undefined;
       state.message = message;
+      state.errorID = (new Date()).getTime().toString();
     },
     loginSuccess: (state, action) => {
       const {token} = action.payload
@@ -40,6 +42,7 @@ export const authSlice = createSlice({
       state.message = 'You have successfully registered!';
     },
     registerFailure: (state, action) => {
+      state.errorID = (new Date()).getTime().toString();
     }
   },
 })

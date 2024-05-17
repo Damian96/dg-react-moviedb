@@ -9,7 +9,8 @@ import {useSelector} from "react-redux";
 import {selectShowToast, selectToastData} from "../../redux/selectors/modals";
 import Toast from "../toast/toast.lazy";
 import {ToastTheme} from "../toast/toast";
-import {selectAuthMessage, selectIsLoggedIn} from "../../redux/selectors/auth";
+import {selectAuthMessage, selectErrorID, selectIsLoggedIn} from "../../redux/selectors/auth";
+import { useNavigate } from "react-router-dom";
 
 interface LayoutProps {
 }
@@ -57,28 +58,35 @@ const Layout: FC<LayoutProps> = () => {
   };
 
   const handleSearchClick = () => {
-    const modal = window.bootstrap.Modal.getOrCreateInstance(document.getElementById('searchModal')!);
+    const searchModal = document.getElementById('searchModal')!;
+    const modal = window.bootstrap.Modal.getOrCreateInstance(searchModal);
     modal.show();
   };
 
   const [showToast, setShowToast] = useState(useSelector(selectShowToast))
   const [toastMessage, setToastMessage] = useState(useSelector(selectToastData))
   const [toastTheme, setToastTheme] = useState<ToastTheme>('info');
+  const [toastKey, setToastKey] = useState('');
 
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const authMessage = useSelector(selectAuthMessage);
+  const errorID = useSelector(selectErrorID);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (isLoggedIn && authMessage) {
       setShowToast(true);
       setToastMessage({message: authMessage});
       setToastTheme('info');
+      setToastKey('bs_toast_' + errorID)
+      navigate('/')
     } else if (!isLoggedIn && authMessage) {
       setShowToast(true);
       setToastMessage({message: authMessage});
       setToastTheme('danger');
+      setToastKey('bs_toast_' + errorID)
     }
-  }, [isLoggedIn, authMessage]);
+  }, [isLoggedIn, authMessage, errorID]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -133,7 +141,7 @@ const Layout: FC<LayoutProps> = () => {
           <div ref={backdropRef} id="backdrop" className="position-fixed top-0 start-0" onClick={handleBackdropClick}></div>
 
           {showToast && toastMessage.message.trim().length ?
-            <Toast body={toastMessage.message} key={'bs_toast_' + (new Date).getTime().toString()}
+            <Toast body={toastMessage.message} key={toastKey}
                    theme={toastTheme}></Toast> : null}
         </div>
       </LayoutWrapper>

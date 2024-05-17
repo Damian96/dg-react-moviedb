@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, {FC, useEffect, useRef, useState} from 'react';
 import {SearchModalWrapper} from './search-modal.styled';
 import {searchMovies} from "../../services/movies";
 import {Movie, MovieResponse} from "../../types/movie";
@@ -10,6 +10,8 @@ interface SearchModalProps {
 const SearchModal: FC<SearchModalProps> = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState<Movie[]>([]);
+
+  const searchModal = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const movieNameRegex = /^[a-zA-Z0-9\s\-&',.()]+$/;
@@ -29,11 +31,19 @@ const SearchModal: FC<SearchModalProps> = () => {
       .catch((err) => {
         console.error('searchTerm error', err);
       })
+
+    if (searchModal.current) {
+      searchModal.current.addEventListener('hidden.bs.modal', () => {
+        setSearchResults([])
+        setSearchTerm('')
+      })
+    }
   }, [searchTerm]);
 
   return (
     <SearchModalWrapper>
-      <div id="searchModal" className="modal fade text-white" tabIndex={-1} aria-labelledby="searchModalLabel"
+      <div id="searchModal" ref={searchModal} className="modal fade text-white" tabIndex={-1}
+           aria-labelledby="searchModalLabel"
            aria-hidden="true">
         <div className="modal-dialog modal-fullscreen">
           <div className="modal-content">

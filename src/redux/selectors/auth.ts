@@ -11,3 +11,7 @@ export const selectIsLoggedIn = createSelector(selectAuthState, state => {
 export const selectAuthMessage = createSelector(selectAuthState, state => {
   return state && (typeof state.message !== "undefined") ? state.message : null;
 })
+
+export const selectErrorID = createSelector(selectAuthState, state => {
+  return state && (typeof state.message !== 'undefined') ? state.errorID : null;
+})

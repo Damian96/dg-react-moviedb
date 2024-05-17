@@ -5,11 +5,9 @@ import {useSelector} from "react-redux";
 import {login, logout} from '../redux/reducers/auth';
 import configurestore, {RootState} from "../redux/configurestore";
 import {selectIsLoggedIn} from "../redux/selectors/auth";
-import {Simulate} from "react-dom/test-utils";
-import select = Simulate.select;
 
 interface AuthGuardProps {
-  component: ReactElement,
+  component: React.ReactElement<any>,
   forceAuth?: boolean
 }
 
@@ -23,7 +21,8 @@ const AuthGuard: FC<AuthGuardProps> = ({component, forceAuth = false, ...rest}) 
   useEffect(() => {
     const unsub = auth.onAuthStateChanged((user) => {
       if (user) {
-        configurestore.dispatch(login(user)); // Dispatch action to update authentication state
+        // configurestore.dispatch(login({email: user.email, token: token})); // Dispatch action to update authentication state
+        // user.getIdToken().then((token) => { })
       } else {
         // User is signed out
         configurestore.dispatch(logout({})); // Dispatch action to update authentication state
@@ -35,7 +34,7 @@ const AuthGuard: FC<AuthGuardProps> = ({component, forceAuth = false, ...rest}) 
     };
   }, [auth]);
 
-  return isLoggedIn ? <Outlet/> : <Navigate to="/login"/>;
+  return isLoggedIn ? component : <Navigate to="/login"/>;
 }
 
 export default AuthGuard
