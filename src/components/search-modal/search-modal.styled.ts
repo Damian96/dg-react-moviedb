@@ -9,5 +9,13 @@ export const SearchModalWrapper = styled.div`
     .movie-grid {
         grid-template-columns: repeat(6, 175px);
     }
+
+    .modal-body {
+      scrollbar-width: thin;
+
+      &:empty {
+        display: none;
+      }
+    }
   }
 `;

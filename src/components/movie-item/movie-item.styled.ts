@@ -5,7 +5,7 @@ export const MovieItemWrapper = styled.div`
     & > img {
       width: 100%;
       object-fit: contain;
-      max-height: 275px;
+      height: 275px;
     }
 
     &-actions {
@@ -17,11 +17,8 @@ export const MovieItemWrapper = styled.div`
       overflow: hidden;
       padding: 10px;
 
-      .lottie-container {
-        position: relative;
-        top: -40px;
-        transform: translate(-33%, 50%) scale(1.6);
-        //transform: translateY(41%) scale(1.6);
+      .favorite-action {
+        transform: translateY(-10px) scale(2);
       }
     }
   }

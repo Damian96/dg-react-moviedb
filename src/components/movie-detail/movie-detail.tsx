@@ -1,6 +1,6 @@
-import React, {FC} from 'react';
-import {MovieDetailWrapper} from './movie-detail.styled';
-import {Movie} from "../../types/movie";
+import { FC } from 'react';
+import { Movie } from "../../types/movie";
+import { MovieDetailWrapper } from './movie-detail.styled';
 
 export interface MovieDetailProps {
   movie: Movie

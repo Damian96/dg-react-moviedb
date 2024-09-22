@@ -1,75 +1,61 @@
-import React, {useEffect, useId, useRef, useState} from 'react';
-import {MovieItemWrapper} from './movie-item.styled';
-import {Movie} from "../../types/movie";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faHeart} from '@fortawesome/free-regular-svg-icons'
-import {faHeart as fasHeart} from '@fortawesome/free-solid-svg-icons';
-import {useSelector} from "react-redux";
-import {selectIsFavorite} from "../../redux/selectors/favorites";
-import configurestore, {RootState} from "../../redux/configurestore";
-import {addFavorite, removeFavorite} from "../../redux/reducers/favorites";
-import lottie, {AnimationItem} from 'lottie-web';
+import { useState } from 'react';
+import Lottie from "react-lottie";
+import { useSelector } from "react-redux";
+import configurestore, { RootState } from "../../redux/configurestore";
+import { addFavorite, removeFavorite } from "../../redux/reducers/favorites";
+import { selectIsFavorite } from "../../redux/selectors/favorites";
+import { Movie } from "../../types/movie";
+import { MovieItemWrapper } from './movie-item.styled';
 
 export interface MovieItemProps {
   movie: Movie
 }
 
 function MovieItem(props: MovieItemProps) {
-  let {movie} = props;
+  let { movie } = props;
 
   const isFavorite = useSelector((state: RootState) => {
     return selectIsFavorite(state, movie);
   });
 
-  const lottieContainerID = useId();
-  const lottieRef =
-    useRef<HTMLDivElement>(document.getElementById(lottieContainerID) as HTMLDivElement);
-  const lottieInstance = useRef<AnimationItem | null>(null);
-  const [showLottie, setShowLottie] = useState(isFavorite)
   const [playLottie, setPlayLottie] = useState(false)
+  const [lottieDirection, setLottieDirection] = useState(isFavorite ? 1 : -1);
 
-  useEffect(() => {
-    if (!showLottie && !isFavorite) return;
-
-    lottieInstance.current = lottie.loadAnimation({
-      container: document.getElementById(lottieContainerID)! as Element,
-      renderer: 'svg',
-      loop: false,
-      autoplay: playLottie,
-      rendererSettings: {
-        preserveAspectRatio: 'xMidYMid slice',
-        progressiveLoad: true
-      },
-      animationData: require('../../assets/animations/add-favorite.json')
-    });
-
-    if (isFavorite && !playLottie) {
-      lottieInstance.current?.addEventListener('DOMLoaded', () => {
-        lottieInstance.current?.goToAndStop(80, true);
-      })
+  const lottieOptions = {
+    loop: false,
+    autoplay: false,
+    animationData: require('../../assets/animations/add-favorite.json'),
+    rendererSettings: {
+      preserveAspectRatio: 'xMidYMid slice'
     }
+  };
 
-    // Return clean up function here
-    return () => lottieInstance ? lottieInstance.current?.destroy() : void (0);
-  }, [playLottie, isFavorite, showLottie, lottieInstance, lottieContainerID]);
+  const onMovieItemLoad = () => {
+    if (isFavorite && !playLottie) {
+      setPlayLottie(true);
+    }
+  }
 
   const handleToggleFavorite = () => {
-    setShowLottie(!isFavorite)
-    setPlayLottie(true)
-    configurestore.dispatch(isFavorite ? removeFavorite(movie) : addFavorite(movie))
+    setTimeout(() => {
+      configurestore.dispatch(isFavorite ? removeFavorite(movie) : addFavorite(movie))
+    }, 800);
+    setLottieDirection(lottieDirection * -1)
+    setPlayLottie(true);
   };
 
   return (
     <MovieItemWrapper>
       <div className="item position-relative" title={movie.title}>
         <img src={process.env.REACT_APP_TMDB_POSTERS_500 + movie.poster_path} alt={movie.title}
-             className="img-fluid"/>
-        <div className="item-actions row justify-content-start">
-          <div className="favorite-action cursor-pointer col-6" title={isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}>
-            {!showLottie ? <FontAwesomeIcon icon={isFavorite ? fasHeart : faHeart} size="2x"
-                                            onClick={handleToggleFavorite}></FontAwesomeIcon> :
-              <div ref={lottieRef} id={lottieContainerID} className="lottie-container"
-                   onClick={handleToggleFavorite}></div>}
+          className="img-fluid" />
+        <div className="item-actions row">
+          <div onClick={handleToggleFavorite} className="favorite-action cursor-pointer col-6" title={isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}>
+            <Lottie options={lottieOptions} direction={lottieDirection} isPaused={!playLottie}
+              eventListeners={[{
+                eventName: 'DOMLoaded',
+                callback: onMovieItemLoad
+              }]}></Lottie>
           </div>
         </div>
       </div>

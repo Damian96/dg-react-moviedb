@@ -24,7 +24,7 @@ const Favorites: FC<FavoritesProps> = () => {
           {movies.length ? movies.map((movie) => {
             if (!movie.poster_path) return null;
             return (
-              <div className="item" key={movie.id} onClick={(event) => handleMovieItemClick(movie.id)}>
+              <div className="item" key={movie.id} /*onClick={(event) => handleMovieItemClick(movie.id)}*/>
                 <MovieItem movie={movie}></MovieItem>
               </div>
             );
